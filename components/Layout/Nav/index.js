@@ -17,10 +17,14 @@ const Nav = () => {
       <Item>
         <List>
           <ListItem>
-            <Link href="/">Home</Link>
+            <Link href="/">
+              <a>Home</a>
+            </Link>
           </ListItem>
           <ListItem>
-            <Link href="/products">Products</Link>
+            <Link href="/products">
+              <a>Products</a>
+            </Link>
           </ListItem>
           <Link href="/">
             <LinkContainer>
@@ -33,10 +37,14 @@ const Nav = () => {
             </LinkContainer>
           </Link>
           <ListItem>
-            <Link href="/orders">Orders</Link>
+            <Link href="/orders">
+              <a>Orders</a>
+            </Link>
           </ListItem>
           <ListItem>
-            <Link href="/contact">Contact</Link>
+            <Link href="/menu">
+              <a>Menu</a>
+            </Link>
           </ListItem>
         </List>
       </Item>
@@ -59,13 +67,13 @@ export default Nav;
 const Container = styled.div`
   height: 100px;
   padding: 0 50px;
-  background: #d1411e;
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 999;
 `;
 
 const LinkContainer = styled.a`
@@ -125,6 +133,11 @@ const List = styled.div`
 const ListItem = styled.div`
   margin: 20px;
   font-weight: 500;
+
+  & > a {
+    color: white;
+    text-decoration: none;
+  }
 `;
 const Cart = styled.div`
   position: relative;

@@ -18,13 +18,14 @@ const ProductCard = () => {
 export default ProductCard;
 
 const Container = styled.div`
-  width: 22%;
+  width: 44%;
   padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px 40px;
+  cursor: pointer;
   & img {
     transition: all 0.6s;
   }
@@ -38,15 +39,15 @@ const Container = styled.div`
 `;
 
 const Title = styled.p`
-  font-size: 18px;
+  font-size: 34px;
   font-weight: bold;
-  color: #d1411e;
+  color: tomato;
   @media (max-width: 768px) {
     font-size: 30px;
   }
 `;
 const Price = styled.p`
-  font-size: 18px;
+  font-size: 30px;
   font-weight: bold;
   color: #666;
   @media (max-width: 768px) {
@@ -55,6 +56,7 @@ const Price = styled.p`
 `;
 const Desc = styled.p`
   text-align: center;
+  font-size: 20px;
   color: #777;
   @media (max-width: 768px) {
     font-size: 24px;

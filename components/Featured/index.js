@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 
@@ -11,18 +11,32 @@ const Featured = () => {
     "/images/featured3.jpg",
   ];
 
-  const handlerArrow = (direction) => {
-    if (direction === "l") {
-      setIndex(index !== 0 ? index - 1 : 2);
-    } else if (direction === "r") {
+  // const handlerArrow = (direction) => {
+  //   if (direction === "l") {
+  //     setIndex(index !== 0 ? index - 1 : 2);
+  //   } else if (direction === "r") {
+  //     setIndex(index !== 2 ? index + 1 : 0);
+  //   }
+  // };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
       setIndex(index !== 2 ? index + 1 : 0);
-    }
-  };
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [index]);
+
   return (
     <Container>
-      <ArrowContainer onClick={() => handlerArrow("l")}>
-        <Image src="/images/arrowl.png" alt="" layout="fill" />
-      </ArrowContainer>
+      {/* <ArrowContainer onClick={() => handlerArrow("l")}>
+        <Image
+          src="/images/arrowl.png"
+          alt=""
+          layout="fill"
+          objectFit="cover"
+        />
+      </ArrowContainer> */}
       <Wrapper style={{ transform: `translateX(${-100 * index}vw)` }}>
         {images.map((image, index) => (
           <ImageContainer key={index}>
@@ -30,9 +44,14 @@ const Featured = () => {
           </ImageContainer>
         ))}
       </Wrapper>
-      <ArrowContainer onClick={() => handlerArrow("r")}>
-        <Image src="/images/arrowr.png" alt="" layout="fill" />
-      </ArrowContainer>
+      {/* <ArrowContainer onClick={() => handlerArrow("r")}>
+        <Image
+          src="/images/arrowr.png"
+          alt=""
+          layout="fill"
+          objectFit="cover"
+        />
+      </ArrowContainer> */}
     </Container>
   );
 };
@@ -40,7 +59,7 @@ const Featured = () => {
 export default Featured;
 
 const Container = styled.div`
-  height: calc(100vh - 100px);
+  height: 60vh;
   background: #d1411e;
   overflow: hidden;
   position: relative;
