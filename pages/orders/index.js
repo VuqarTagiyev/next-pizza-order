@@ -2,195 +2,118 @@ import Image from "next/image";
 import styled from "styled-components";
 import Link from "next/link";
 
+import { useEffect, useState } from "react";
+
 const Orders = () => {
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    if (localStorage.getItem("orders")) {
+      setOrders(JSON.parse(localStorage.getItem("orders")));
+    }
+    console.log(JSON.parse(localStorage.getItem("orders")));
+  }, []);
+
   return (
     <Container>
       <h1>Orders</h1>
-      <Item>
-        <OrderHeader>
-          <OrderID>
-            <OrderIDText>Order ID:</OrderIDText> #14135243525246245
-          </OrderID>
-          <OrderDate>
-            <OrderDateText>Order Date:</OrderDateText> 12/12/2020
-          </OrderDate>
-        </OrderHeader>
-        <Table>
-          <THead>
-            <Tr>
-              <Th>Product</Th>
-              <Th>Name</Th>
-              <Th>Extras</Th>
-              <Th>Price</Th>
-              <Th>Quantity</Th>
-              <Th>Total</Th>
-            </Tr>
-          </THead>
-          <TBody>
-            <Tr>
-              <Td>
-                <ImageContainer>
-                  <Image
-                    src="/images/pizza.png"
-                    objectFit="cover"
-                    layout="fill"
-                    alt=""
-                  />
-                </ImageContainer>
-              </Td>
-              <Td>
-                <Name>CORALZO</Name>
-              </Td>
-              <Td>
-                <Extras>Double ingredient, spicy sauce</Extras>
-              </Td>
-              <Td>
-                <Price>$19.90</Price>
-              </Td>
-              <Td>
-                <Quantity>2</Quantity>
-              </Td>
-              <Td>
-                <Total>$39.80</Total>
-              </Td>
-            </Tr>
 
-            <Tr>
-              <Td>
-                <ImageContainer>
-                  <Image
-                    src="/images/pizza.png"
-                    objectFit="cover"
-                    layout="fill"
-                    alt=""
-                  />
-                </ImageContainer>
-              </Td>
-              <Td>
-                <Name>CORALZO</Name>
-              </Td>
-              <Td>
-                <Extras>Double ingredient, spicy sauce</Extras>
-              </Td>
-              <Td>
-                <Price>$19.90</Price>
-              </Td>
-              <Td>
-                <Quantity>2</Quantity>
-              </Td>
-              <Td>
-                <Total>$39.80</Total>
-              </Td>
-            </Tr>
-          </TBody>
-        </Table>
-        <TotalCost>
-          <p>Total cost: </p> $79.60
-        </TotalCost>
-        <Tracking>
-          <Status>
-            Status: <span> Preparing</span>
-          </Status>
-          <Link href="/orders/12">
-            <a>Track</a>
-          </Link>
-        </Tracking>
-      </Item>
-      <Item>
-        <OrderHeader>
-          <OrderID>
-            <OrderIDText>Order ID:</OrderIDText> #14135243525246245
-          </OrderID>
-          <OrderDate>
-            <OrderDateText>Order Date:</OrderDateText> 12/12/2020
-          </OrderDate>
-        </OrderHeader>
-        <Table>
-          <THead>
-            <Tr>
-              <Th>Product</Th>
-              <Th>Name</Th>
-              <Th>Extras</Th>
-              <Th>Price</Th>
-              <Th>Quantity</Th>
-              <Th>Total</Th>
-            </Tr>
-          </THead>
-          <TBody>
-            <Tr>
-              <Td>
-                <ImageContainer>
-                  <Image
-                    src="/images/pizza.png"
-                    objectFit="cover"
-                    layout="fill"
-                    alt=""
-                  />
-                </ImageContainer>
-              </Td>
-              <Td>
-                <Name>CORALZO</Name>
-              </Td>
-              <Td>
-                <Extras>Double ingredient, spicy sauce</Extras>
-              </Td>
-              <Td>
-                <Price>$19.90</Price>
-              </Td>
-              <Td>
-                <Quantity>2</Quantity>
-              </Td>
-              <Td>
-                <Total>$39.80</Total>
-              </Td>
-            </Tr>
+      {orders.length > 0 ? (
+        orders.map((order) => (
+          <Item key={order._id}>
+            <OrderHeader>
+              <OrderID>
+                <OrderIDText>Order ID:</OrderIDText> #{order._id}
+              </OrderID>
+              <OrderDate>
+                <OrderDateText>Order Date:</OrderDateText> {order.date}
+              </OrderDate>
+            </OrderHeader>
+            <Table>
+              <THead>
+                <Tr>
+                  <Th>Product</Th>
+                  <Th>Name</Th>
+                  <Th>Extras</Th>
+                  <Th>Price</Th>
+                  <Th>Quantity</Th>
+                  <Th>Total</Th>
+                </Tr>
+              </THead>
 
-            <Tr>
-              <Td>
-                <ImageContainer>
-                  <Image
-                    src="/images/pizza.png"
-                    objectFit="cover"
-                    layout="fill"
-                    alt=""
-                  />
-                </ImageContainer>
-              </Td>
-              <Td>
-                <Name>CORALZO</Name>
-              </Td>
-              <Td>
-                <Extras>Double ingredient, spicy sauce</Extras>
-              </Td>
-              <Td>
-                <Price>$19.90</Price>
-              </Td>
-              <Td>
-                <Quantity>2</Quantity>
-              </Td>
-              <Td>
-                <Total>$39.80</Total>
-              </Td>
-            </Tr>
-          </TBody>
-        </Table>
-        <TotalCost>
-          <p>Total cost: </p> $79.60
-        </TotalCost>
-        <Tracking>
-          <Status>
-            Status: <span> Preparing</span>
-          </Status>
-          <Link href="/orders/12">
-            <a>Track</a>
-          </Link>
-        </Tracking>
-      </Item>
+              <TBody>
+                {order.items.map((item, index) => (
+                  <Tr key={index}>
+                    <Td>
+                      <ImageContainer>
+                        <Image
+                          src={item.img}
+                          objectFit="cover"
+                          layout="fill"
+                          alt=""
+                        />
+                      </ImageContainer>
+                    </Td>
+                    <Td>
+                      <Name>{item.name}</Name>
+                    </Td>
+                    <Td>
+                      <Extras>
+                        {item.ingredients.length > 0
+                          ? item.ingredients.map((extra) => (
+                              <span key={extra.id}>{extra.name},</span>
+                            ))
+                          : "No extras"}
+                      </Extras>
+                    </Td>
+                    <Td>
+                      <Price>${item.totalPrice}</Price>
+                    </Td>
+                    <Td>
+                      <Quantity>{item.quantity}</Quantity>
+                    </Td>
+                    <Td>
+                      <Total>${item.totalPrice * item.quantity}</Total>
+                    </Td>
+                  </Tr>
+                ))}
+              </TBody>
+            </Table>
+            <TotalCost>
+              <p>Total cost: </p> ${order.total}
+            </TotalCost>
+            <Tracking>
+              <Status>
+                Status: <span> Preparing</span>
+              </Status>
+              <Link href="/orders/12">
+                <a>Track</a>
+              </Link>
+            </Tracking>
+          </Item>
+        ))
+      ) : (
+        <NoOrders>
+          <p>You have no order</p>
+        </NoOrders>
+      )}
     </Container>
   );
 };
 
 export default Orders;
+
+const NoOrders = styled.div`
+  padding: 10px;
+  background: rgba(235, 64, 52, 0.15);
+  margin-top: 10px;
+  & > p {
+    color: rgba(235, 64, 52);
+    font-weight: 500;
+    padding: 10px 0;
+    font-size: 18px;
+  }
+`;
 
 const OrderHeader = styled.div`
   display: flex;

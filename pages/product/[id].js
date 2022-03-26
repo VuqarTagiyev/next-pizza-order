@@ -1,28 +1,126 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import styled from "styled-components";
+import Loading from "../../components/utils/Loading";
+import { useRouter } from "next/router";
 
-const Product = () => {
-  const [size, setSize] = useState(0);
-  const pizza = {
-    id: 1,
-    img: "/images/pizza.png",
-    name: "CAMPAGNOLA",
-    price: [19.9, 23.9, 27.9],
-    desc: "lorem ipsum dolor sit amet, ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu t ",
+const pizza = {
+  id: 1,
+  img: "/images/pizza.png",
+  name: "CAMPAGNOLA",
+  price: [19.9, 23.9, 27.9],
+  desc: "lorem ipsum dolor sit amet, ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu t ",
+  ingredients: [
+    {
+      id: 0,
+      name: "Garlic souce",
+      price: 2,
+    },
+    {
+      id: 1,
+      name: "Souce",
+      price: 1,
+    },
+    {
+      id: 2,
+      name: "Extra cheese",
+      price: 2,
+    },
+  ],
+};
+
+const Product = ({ item = pizza }) => {
+  const [chosenOrder, setChosenOrder] = useState({
+    size: 0,
+    ingredients: [],
+    quantity: 1,
+    name: item.name,
+    img: item.img,
+  });
+  const [totalPrice, setTotalPrice] = useState(item.price[0]);
+  // -------
+  const addIngredient = (e, ingredient) => {
+    if (!e)
+      setChosenOrder({
+        ...chosenOrder,
+        ingredients: chosenOrder.ingredients.filter(
+          (element) => element.id !== ingredient.id
+        ),
+      });
+    else
+      setChosenOrder({
+        ...chosenOrder,
+        ingredients: [...chosenOrder.ingredients, ingredient],
+      });
   };
 
+  const setSize = (size) => {
+    setChosenOrder({ ...chosenOrder, size });
+  };
+
+  // calculate total price
+
+  const calcTotal = () => {
+    let total = 0;
+    total += item.price[chosenOrder.size];
+    // if (chosenOrder.ingredients.length > 0) {
+    for (let i = 0; i < chosenOrder.ingredients.length; i++) {
+      total += chosenOrder.ingredients[i].price;
+    }
+
+    setTotalPrice(total);
+  };
+
+  // change quantity
+
+  const changeQuantity = (quantity) => {
+    setChosenOrder({ ...chosenOrder, quantity });
+  };
+
+  useEffect(() => {
+    calcTotal();
+  }, [chosenOrder]);
+
+  // set setCartItems to local state
+
+  const setCartItems = () => {
+    setLoading(true);
+    chosenOrder.totalPrice = totalPrice;
+    let chartItems = [];
+    if (localStorage.getItem("cartItems")) {
+      chartItems = JSON.parse(localStorage.getItem("cartItems"));
+    }
+
+    localStorage.setItem(
+      "cartItems",
+      JSON.stringify([...chartItems, chosenOrder])
+    );
+  };
+
+  // Loading
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const loadingTimeout = setTimeout(() => {
+      if (loading) {
+        router.push("/cart");
+      }
+    }, 2000);
+
+    return () => clearTimeout(loadingTimeout);
+  }, [loading]);
   return (
     <Container>
       <Left>
         <ImageContainer>
-          <Image src={pizza.img} layout="fill" alt="" objectFit="contain" />
+          <Image src={item.img} layout="fill" alt="" objectFit="contain" />
         </ImageContainer>
       </Left>
       <Right>
-        <Title>{pizza.name}</Title>
-        <Price>${pizza.price[size]}</Price>
-        <Description>{pizza.desc}</Description>
+        <Title>{item.name}</Title>
+        <Price>${(totalPrice * chosenOrder.quantity).toFixed(2)}</Price>
+        <Description>{item.desc}</Description>
         <Choose>Choose the size</Choose>
         <Sizes>
           <Size onClick={() => setSize(0)}>
@@ -40,28 +138,31 @@ const Product = () => {
         </Sizes>
         <Choose>Choose additional ingredients</Choose>
         <Ingredients>
-          <Option>
-            <CheckBox type="checkbox" id="double" name="double" />
-            <label htmlFor="double">Double Ingredients</label>
-          </Option>
-          <Option>
-            <CheckBox type="checkbox" id="cheese" name="cheese" />
-            <label htmlFor="cheese">Extra Cheese</label>
-          </Option>
-          <Option>
-            <CheckBox type="checkbox" id="spicy" name="spicy" />
-            <label htmlFor="spicy">Spicy Sauce</label>
-          </Option>
-          <Option>
-            <CheckBox type="checkbox" id="garlic" name="garlic" />
-            <label htmlFor="garlic">Garlic Sauce</label>
-          </Option>
+          {item.ingredients.map((element) => {
+            return (
+              <Option key={element.id}>
+                <CheckBox
+                  type="checkbox"
+                  id={element.name}
+                  name={element.name}
+                  onChange={(e) => addIngredient(e.target.checked, element)}
+                />
+                <label htmlFor={element.name}>{element.name}</label>
+              </Option>
+            );
+          })}
         </Ingredients>
         <Add>
-          <Quantity type="number" defaultValue={1} />
-          <Button>Add to Cart</Button>
+          <Quantity
+            type="number"
+            defaultValue={chosenOrder.quantity}
+            min={1}
+            onChange={({ target }) => changeQuantity(parseInt(target.value))}
+          />
+          <Button onClick={setCartItems}>Add to Cart</Button>
         </Add>
       </Right>
+      {loading && <Loading />}
     </Container>
   );
 };
@@ -141,6 +242,7 @@ const Option = styled.div`
   margin-right: 10px;
   font-size: 14px;
   font-weight: 500;
+  user-select: none;
 `;
 const CheckBox = styled.input`
   width: 20px;

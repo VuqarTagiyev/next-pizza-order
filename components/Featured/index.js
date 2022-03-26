@@ -59,7 +59,7 @@ const Featured = () => {
 export default Featured;
 
 const Container = styled.div`
-  height: 60vh;
+  height: 50vh;
   background: #d1411e;
   overflow: hidden;
   position: relative;

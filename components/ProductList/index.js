@@ -1,11 +1,18 @@
 import styled from "styled-components";
 import ProductCard from "./ProductCard/index";
 
+import { useEffect, useState } from "react";
+
+import { products } from "../../data/products";
+
 const ProductList = () => {
+  useEffect(() => {
+    console.log(products);
+  }, []);
+
   return (
     <Container>
       <Title>THE BEST PIZZA IN TOWN</Title>
-
       <Desc>
         Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text ever
@@ -18,14 +25,9 @@ const ProductList = () => {
         of Lorem Ipsum
       </Desc>
       <Wrapper>
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
+        {products.map((product) => {
+          return <ProductCard key={product.id} product={product} />;
+        })}
       </Wrapper>
     </Container>
   );

@@ -1,17 +1,26 @@
 import Image from "next/image";
 import styled from "styled-components";
+import Link from "next/link";
 
-const ProductCard = () => {
+const ProductCard = ({ product }) => {
   return (
-    <Container>
-      <Image src="/images/pizza.png" alt="" width="500" height="500" />
-      <Title>California Pizza.</Title>
-      <Price>$29.90</Price>
-      <Desc>
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's
-      </Desc>
-    </Container>
+    <Link href="product/id" as={`product/${product.id}`}>
+      <Container>
+        <Image
+          src={product.img}
+          alt=""
+          width="500"
+          height="500"
+          objectFit="cover"
+        />
+        <Title>{product.name}</Title>
+        <Price>${product.price[0]}</Price>
+        <Desc>
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's
+        </Desc>
+      </Container>
+    </Link>
   );
 };
 
