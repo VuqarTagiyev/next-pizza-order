@@ -1,15 +1,7 @@
 import styled from "styled-components";
 import ProductCard from "./ProductCard/index";
 
-import { useEffect, useState } from "react";
-
-import { products } from "../../data/products";
-
-const ProductList = () => {
-  useEffect(() => {
-    console.log(products);
-  }, []);
-
+const ProductList = ({ products }) => {
   return (
     <Container>
       <Title>THE BEST PIZZA IN TOWN</Title>

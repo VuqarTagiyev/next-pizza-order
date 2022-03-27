@@ -3,18 +3,9 @@ import Head from "next/head";
 import Image from "next/image";
 import Featured from "../components/Featured";
 import ProductList from "../components/ProductList";
-import { useSelector, useDispatch } from "react-redux";
-import actions from "../redux/actions/";
-const Home = () => {
-  const { orders } = useSelector((state) => state);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(actions.orders.setOrders([1, 2, 3]));
-  }, []);
+import { server } from "../config";
 
-  useEffect(() => {
-    console.log(orders);
-  }, [orders]);
+const Home = ({ products }) => {
   return (
     <div>
       <Head>
@@ -23,9 +14,20 @@ const Home = () => {
         <meta name="description" content="Best pizza shop" />
       </Head>
       <Featured />
-      <ProductList />
+      <ProductList products={products} />
     </div>
   );
 };
 
 export default Home;
+
+export const getStaticProps = async () => {
+  const products = await fetch(`${server}/api/products`).then((res) =>
+    res.json()
+  );
+  return {
+    props: {
+      products,
+    },
+  };
+};
