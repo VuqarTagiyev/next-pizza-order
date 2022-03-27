@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import CheckoutButton from "../../components/PayPal/Button";
 import Link from "next/link";
-import { generateID } from "../../components/utils/generateId";
+import { generateID } from "../../components/utils/generateID";
 
 const Cart = () => {
   const [items, setItems] = useState([]);
