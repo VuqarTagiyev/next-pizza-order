@@ -17,7 +17,7 @@ const ProductList = ({ products }) => {
         of Lorem Ipsum
       </Desc>
       <Wrapper>
-        {products.map((product) => {
+        {products?.map((product) => {
           return <ProductCard key={product.id} product={product} />;
         })}
       </Wrapper>
