@@ -15,4 +15,9 @@ const Layout = ({ children }) => {
 
 export default Layout;
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: space-between;
+`;
