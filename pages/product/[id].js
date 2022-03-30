@@ -94,7 +94,14 @@ const Product = ({ item }) => {
     <Container>
       <Left>
         <ImageContainer>
-          <Image src={item.img} layout="fill" alt="" objectFit="contain" />
+          <Image
+            src={item.img}
+            layout="fill"
+            alt=""
+            objectFit="contain"
+            placeholder="blur"
+            blurDataURL="data:..."
+          />
         </ImageContainer>
       </Left>
       <Right>

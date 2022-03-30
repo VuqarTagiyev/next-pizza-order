@@ -46,6 +46,8 @@ const Featured = () => {
               objectFit="cover"
               layout="fill"
               priority
+              placeholder="blur"
+              blurDataURL="data:..."
             />
           </ImageContainer>
         ))}

@@ -12,6 +12,8 @@ const ProductCard = ({ product }) => {
           width="500"
           height="500"
           objectFit="cover"
+          placeholder="blur"
+          blurDataURL="data:..."
         />
         <Title>{product.name}</Title>
         <Price>${product.price[0]}</Price>
