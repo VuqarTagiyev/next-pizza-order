@@ -11,7 +11,6 @@ const Orders = () => {
     if (localStorage.getItem("orders")) {
       setOrders(JSON.parse(localStorage.getItem("orders")));
     }
-    console.log(JSON.parse(localStorage.getItem("orders")));
   }, []);
 
   return (
@@ -19,7 +18,7 @@ const Orders = () => {
       <h1>Orders</h1>
 
       {orders.length > 0 ? (
-        orders.map((order) => (
+        orders.reverse().map((order) => (
           <Item key={order._id}>
             <OrderHeader>
               <OrderID>
@@ -73,20 +72,22 @@ const Orders = () => {
                       <Quantity>{item.quantity}</Quantity>
                     </Td>
                     <Td>
-                      <Total>${item.totalPrice * item.quantity}</Total>
+                      <Total>
+                        ${(item.totalPrice * item.quantity).toFixed(2)}
+                      </Total>
                     </Td>
                   </Tr>
                 ))}
               </TBody>
             </Table>
             <TotalCost>
-              <p>Total cost: </p> ${order.total}
+              <p>Total cost: </p> ${order.total.toFixed(2)}
             </TotalCost>
             <Tracking>
               <Status>
                 Status: <span> Preparing</span>
               </Status>
-              <Link href="/orders/12">
+              <Link href="/orders/[id]" as={`/orders/${order._id}`}>
                 <a>Track</a>
               </Link>
             </Tracking>

@@ -2,7 +2,13 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useContext } from "react";
+
+import { Context } from "../../../context/index";
+
 const Nav = () => {
+  const { basketCount } = useContext(Context);
+  console.log(basketCount);
   return (
     <Container>
       <Item>
@@ -53,7 +59,8 @@ const Nav = () => {
           <Link href="/cart">
             <LinkContainer>
               <Image src="/images/cart.png" width="30px" height="30px" alt="" />
-              <Counter>2</Counter>
+
+              {basketCount && <Counter>{basketCount}</Counter>}
             </LinkContainer>
           </Link>
         </Cart>

@@ -1,10 +1,11 @@
 import { PayPalButtons } from "@paypal/react-paypal-js";
 
-const CheckoutButton = ({ setIsPaid }) => {
+const CheckoutButton = ({ handlePayment, createOrderHandler }) => {
   return (
     <PayPalButtons
+      createOrder={createOrderHandler}
       onApprove={(data, actions) => {
-        setIsPaid();
+        handlePayment();
       }}
     />
   );

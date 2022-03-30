@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const ProductCard = ({ product }) => {
   return (
-    <Link href="product/id" as={`product/${product.id}`}>
+    <Link href="/product/[id]" as={`/product/${product.id}`}>
       <Container>
         <Image
           src={product.img}

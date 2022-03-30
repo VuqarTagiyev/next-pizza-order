@@ -1,35 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import Loading from "../../components/utils/Loading";
 import { useRouter } from "next/router";
+import { Context } from "../../context";
 
-const pizza = {
-  id: 1,
-  img: "/images/pizza.png",
-  name: "CAMPAGNOLA",
-  price: [19.9, 23.9, 27.9],
-  desc: "lorem ipsum dolor sit amet, ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu t ",
-  ingredients: [
-    {
-      id: 0,
-      name: "Garlic souce",
-      price: 2,
-    },
-    {
-      id: 1,
-      name: "Souce",
-      price: 1,
-    },
-    {
-      id: 2,
-      name: "Extra cheese",
-      price: 2,
-    },
-  ],
-};
+import { server } from "../../config";
 
-const Product = ({ item = pizza }) => {
+const Product = ({ item }) => {
   const [chosenOrder, setChosenOrder] = useState({
     size: 0,
     ingredients: [],
@@ -38,6 +16,7 @@ const Product = ({ item = pizza }) => {
     img: item.img,
   });
   const [totalPrice, setTotalPrice] = useState(item.price[0]);
+  const { setBasketCount, basketCount } = useContext(Context);
   // -------
   const addIngredient = (e, ingredient) => {
     if (!e)
@@ -95,6 +74,7 @@ const Product = ({ item = pizza }) => {
       "cartItems",
       JSON.stringify([...chartItems, chosenOrder])
     );
+    setBasketCount(basketCount + 1);
   };
 
   // Loading
@@ -157,6 +137,7 @@ const Product = ({ item = pizza }) => {
             type="number"
             defaultValue={chosenOrder.quantity}
             min={1}
+            max={5}
             onChange={({ target }) => changeQuantity(parseInt(target.value))}
           />
           <Button onClick={setCartItems}>Add to Cart</Button>
@@ -168,6 +149,32 @@ const Product = ({ item = pizza }) => {
 };
 
 export default Product;
+
+export const getStaticPaths = async () => {
+  const products = await fetch(`${server}/api/products`).then((res) =>
+    res.json()
+  );
+
+  const paths = products.map((product) => ({
+    params: { id: product.id.toString() },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps = async ({ params }) => {
+  const res = await fetch(`${server}/api/products/${params.id}`);
+  const item = await res.json();
+
+  return {
+    props: {
+      item,
+    },
+  };
+};
 
 const Left = styled.div`
   flex: 1;

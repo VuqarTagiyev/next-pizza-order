@@ -1,19 +1,19 @@
 import "../styles/global.css";
 import Layout from "../components/Layout";
-import { Provider } from "react-redux";
-import store from "../redux/store";
 
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
+import ContextProvider from "../context";
+
 const MyApp = ({ Component, pageProps }) => {
   return (
-    <PayPalScriptProvider>
-      <Provider store={store}>
+    <ContextProvider>
+      <PayPalScriptProvider>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </Provider>
-    </PayPalScriptProvider>
+      </PayPalScriptProvider>
+    </ContextProvider>
   );
 };
 

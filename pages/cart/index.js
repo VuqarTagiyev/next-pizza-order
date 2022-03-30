@@ -1,15 +1,19 @@
 import Image from "next/image";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import CheckoutButton from "../../components/PayPal/Button";
 import Link from "next/link";
 import { generateID } from "../../components/utils/generateID";
+
+import { Context } from "../../context/index";
 
 const Cart = () => {
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
   const [isCheckout, setIsCheckout] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
+
+  const { setBasketCount } = useContext(Context);
 
   useEffect(() => {
     if (localStorage.getItem("cartItems")) {
@@ -48,6 +52,28 @@ const Cart = () => {
     setItems([]);
   };
 
+  const handlePayment = () => {
+    setIsCheckout(false);
+    setToLocalStorage();
+    setIsPaid(true);
+    setBasketCount(0);
+  };
+
+  // paypal create order
+
+  const createOrderHandler = (data, actions) => {
+    // Set up the transaction
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: total.toFixed(2),
+          },
+        },
+      ],
+    });
+  };
+
   return (
     <Container>
       {!isPaid && (
@@ -70,7 +96,7 @@ const Cart = () => {
                     <Td>
                       <ImageContainer>
                         <Image
-                          src="/images/pizza.png"
+                          src={item.img}
                           objectFit="cover"
                           layout="fill"
                           alt=""
@@ -124,7 +150,7 @@ const Cart = () => {
         </Left>
       )}
       <Right>
-        <Wrapper onClick={() => setToLocalStorage()}>
+        <Wrapper>
           <Title>CART TOTAL</Title>
           <TotalText>
             <TotalTextTitle>Subtotal:</TotalTextTitle>$
@@ -143,7 +169,22 @@ const Cart = () => {
           >
             CHECKOUT NOW!
           </Button>
-          {isCheckout && <CheckoutButton setIsPaid={() => setIsPaid(true)} />}
+          {isCheckout && (
+            <>
+              <TestAccount>
+                <TestAccountTitle>Paypal test account</TestAccountTitle>
+                <TestAccountText>
+                  sb-gylzt14559837@personal.example.com
+                </TestAccountText>
+
+                <TestAccountText>jv-Dd-Q0</TestAccountText>
+              </TestAccount>
+              <CheckoutButton
+                createOrderHandler={createOrderHandler}
+                handlePayment={() => handlePayment()}
+              />
+            </>
+          )}
         </Wrapper>
       </Right>
     </Container>
@@ -152,6 +193,16 @@ const Cart = () => {
 
 export default Cart;
 
+const TestAccount = styled.div``;
+
+const TestAccountText = styled.p`
+  font-size: 12px;
+  margin: 4px 0;
+`;
+
+const TestAccountTitle = styled.h3`
+  font-weight: 400;
+`;
 const NoItems = styled.div`
   padding: 10px;
   background: rgba(235, 64, 52, 0.15);

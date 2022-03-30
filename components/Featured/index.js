@@ -40,7 +40,13 @@ const Featured = () => {
       <Wrapper style={{ transform: `translateX(${-100 * index}vw)` }}>
         {images.map((image, index) => (
           <ImageContainer key={index}>
-            <Image src={image} alt="" objectFit="cover" layout="fill" />
+            <Image
+              src={image}
+              alt=""
+              objectFit="cover"
+              layout="fill"
+              priority
+            />
           </ImageContainer>
         ))}
       </Wrapper>
